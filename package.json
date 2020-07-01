@@ -1,0 +1,48 @@
+{
+  "name": "@spootechnologies/objy",
+  "version": "0.5.49",
+  "description": "A JavaScript framework for building object-driven use cases",
+  "main": "spoo.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spoo-technologies/spoo.git"
+  },
+  "keywords": [
+    "platform",
+    "javascript",
+    "objects"
+  ],
+  "author": "Marco Boelling",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spoo-technologies/spoo/issues"
+  },
+  "homepage": "https://github.com/spoo-technologies/objy#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.8",
+    "bull": "^3.13.0",
+    "fs": "0.0.1-security",
+    "gridfs-stream": "^1.1.1",
+    "localStorage": "^1.0.4",
+    "lokijs": "^1.5.8",
+    "lowdb": "^1.0.0",
+    "mingo": "^2.4.0",
+    "mocha": "^6.2.2",
+    "moment": "^2.24.0",
+    "mongoose": "^5.8.11",
+    "mongoose-gridfs": "^1.2.26",
+    "multer": "*",
+    "multer-gridfs-storage": "^4.0.2",
+    "nedb": "^1.8.0",
+    "shortid": "^2.2.15",
+    "vm2": "^3.8.4"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "jsdoc-to-markdown": "^5.0.3",
+    "tinyify": "^2.5.2"
+  }
+}
