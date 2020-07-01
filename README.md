@@ -1,10 +1,10 @@
-# SPOO Mappers
+# OBJY Catalog
 
 A collection of adapters for using the right technologies for specific use cases and building domain specific object families. 
 
 ## Getting Started
 
-SPOO Mappers are written in JavaScript and can be installed along with the SPOO Framework. They are used to define custom Object Families with the fitting technologies underneath.
+OBJY Mappers are written in JavaScript and can be installed along with the OBJY Framework. They are used to define custom Object Families with the fitting technologies underneath.
 
 There are three types of mappers: Persistence, Processing and Observation.
 
@@ -24,16 +24,9 @@ Observer | Observes object events and execute their actions. | Cron-based soluti
 
 
 ```
-npm install spoo-mappers
+npm install objy-catalog
 ```
 
-
-### CDN
-
-
-```
-https://spoo.io/code/spoo-mappers.zip
-```
 
 ## Example
 
@@ -41,12 +34,12 @@ Let's create an Object Family that uses the following mappers:
 
 ```
 // Install the mappers
-var storage = require('./mappers/persistence/inMemory.js');
+var storage = require('./mappers/storage/inMemory.js');
 var observer = require('./mappers/observer/inMemory.js');
 var processor = require('./mappers/processor/inMemory.js');
 
 // Define an object family
-SPOO.define({
+OBJY.define({
    name : "Object",
    pluralName: "Objects",
    persistence: new storage(),
@@ -55,7 +48,7 @@ SPOO.define({
 })
 
 // Use the object family's constructor
-SPOO.Object({name: "Hello World"}).add(function(data)
+OBJY.Object({name: "Hello World"}).add(function(data)
 {
    console.log(data);
 })
@@ -67,23 +60,23 @@ If you need a mapper that doesn't exist yet, you can simply build it yourself. E
 
 ### Why build a new mapper?
 
-Building mappers is the best way to participate in the SPOO Ecosystem. 
+Building mappers is the best way to participate in the OBJY Ecosystem. 
 
 Every use case may have different requirements for the technologies used. By matching requirements and technical solutions, the best results can be archieved.
 
-With many different mappers for different technologies, SPOO can be used to build platforms for a varaity of different use cases and domains.
+With many different mappers for different technologies, OBJY can be used to build platforms for a varaity of different use cases and domains.
 
 ### Natively integrate third party systems
 
-Mappers can also be used to connect to third party systems and introduce external data as SPOO objects.
+Mappers can also be used to connect to third party systems and introduce external data as OBJY objects. 
 
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](...) for details on our code of conduct, and the process for submitting pull requests to us.
 
 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project itself is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details. 
