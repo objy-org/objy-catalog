@@ -24,7 +24,7 @@ Observer | Observes object events and execute their actions. | Cron-based soluti
 
 
 ```
-npm install objy-catalog
+npm install @spootechnologies/objy-catalog
 ```
 
 
@@ -33,18 +33,15 @@ npm install objy-catalog
 Let's create an Object Family that uses the following mappers:
 
 ```
-// Install the mappers
-var storage = require('./mappers/storage/inMemory.js');
-var observer = require('./mappers/observer/inMemory.js');
-var processor = require('./mappers/processor/inMemory.js');
+const CATALOG = require('@spootechnologies/objy-catalog');
 
 // Define an object family
 OBJY.define({
    name : "Object",
    pluralName: "Objects",
-   persistence: new storage(),
-   observer: new observer(),
-   processor: new processor()
+   persistence: new CATALOG.mappers.storage.mongo(),
+   observer: new CATALOG.mappers.observers.interval(),
+   processor: new CATALOG.mappers.processors.eval()
 })
 
 // Use the object family's constructor
@@ -56,7 +53,7 @@ OBJY.Object({name: "Hello World"}).add(function(data)
 
 ## Build your own mapper - extend the ecosystem
 
-If you need a mapper that doesn't exist yet, you can simply build it yourself. Each mapper type must follow a predefined structure, that can be found inside the mapper directories (_template.js). You can use this template as a starting point.
+If you need a mapper that doesn't exist yet, you can simply build it yourself. Each mapper type must follow a predefined structure, that can be found inside the templates directory. You can use these template files as a starting point.
 
 ### Why build a new mapper?
 
@@ -64,17 +61,16 @@ Building mappers is the best way to participate in the OBJY Ecosystem.
 
 Every use case may have different requirements for the technologies used. By matching requirements and technical solutions, the best results can be archieved.
 
-With many different mappers for different technologies, OBJY can be used to build platforms for a varaity of different use cases and domains.
+With many different mappers for different technologies, OBJY can be used to build programs for a varaity of different use cases and domains.
 
 ### Natively integrate third party systems
 
-Mappers can also be used to connect to third party systems and introduce external data as OBJY objects. 
+Mappers can also be used to connect to third party systems and introduce external data as OBJY objects. TBD...
 
 
 ## Contributing
 
 Please read [CONTRIBUTING.md](...) for details on our code of conduct, and the process for submitting pull requests to us.
-
 
 
 ## License
