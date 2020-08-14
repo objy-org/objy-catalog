@@ -43,7 +43,7 @@ Mapper = function(OBJY, options) {
             authorisations: {}
         },
 
-        ObjSchema: new Schema(this.generalObjectModel, { minimize: false, strict: false}),
+        ObjSchema: new Schema(this.generalObjectModel, { minimize: false, strict: false }),
 
         NestedSchema: new Schema({}, { minimize: false }),
 
@@ -192,7 +192,6 @@ Mapper = function(OBJY, options) {
             var Obj = db.model(this.objectFamily, this.ObjSchema);
 
 
-
             if (flags.$page == 1) flags.$page = 0;
             else flags.$page -= 1;
 
@@ -219,30 +218,52 @@ Mapper = function(OBJY, options) {
                 arr.push({ $sort: s })
             }
 
+            if (Object.keys(s).length == 0) s = { '_id': -1 };
+
             if (app) criteria['applications'] = { $in: [app] }
-
-            console.warn('__APP__', app, criteria['applications']);
-
-            console.warn('criteria', criteria, this.globalPaging, flags.$page)
 
             var finalQuery = Obj.find(criteria)
 
-            if (flags.$limit) finalQuery.limit(flags.$limit).sort(s || { '_id': 1 });
-            else finalQuery.limit(this.globalPaging).skip(this.globalPaging * (flags.$page || 0)).sort(s || { '_id': 1 });
+            if (flags.$limit) finalQuery.limit(flags.$limit).sort(s);
+            else finalQuery.limit(this.globalPaging).skip(this.globalPaging * (flags.$page || 0)).sort(s);
 
-            if (criteria.$aggregate) {
-                finalQuery = Obj.aggregate(criteria.$aggregate);
-            }
+            if (criteria.$sum || criteria.$count) {
+                var aggregation = JSON.parse(JSON.stringify(criteria.$sum || criteria.$count));;
+                var pipeline = [];
+                var match = criteria.$match;
 
-            finalQuery.lean().exec(function(err, data) {
-                if (err) {
-                    error(err);
+                if(typeof match === 'string') match = JSON.parse(match);
+                
+                if (match) pipeline.push({ $match: match });
+
+                pipeline.push({ $group: { _id: null, "sum": { $sum: { $toDouble: aggregation } } } })
+
+                Obj.aggregate(pipeline, function(err, data) {
+                    if (err) {
+                        console.warn('mongo err', err)
+                        error(err);
+                        return;
+                    }
+                    success(data);
                     return;
-                }
+                });
 
-                success(data);
-                return;
-            });
+            } else {
+
+                console.warn(criteria.$aggregate)
+
+                finalQuery.lean().exec(function(err, data) {
+                    if (err) {
+                        console.warn('mongo err', err)
+                        error(err);
+                        return;
+                    }
+                    console.warn('data', data);
+                    success(data);
+                    return;
+                });
+
+            }
 
         },
 
@@ -285,7 +306,7 @@ Mapper = function(OBJY, options) {
             if (this.multitenancy == this.CONSTANTS.MULTITENANCY.SHARED && client) criteria['tenantId'] = client;
 
             Obj.findOneAndUpdate(criteria, JSON.parse(JSON.stringify(spooElement)), function(err, data) {
-                
+
                 if (err) {
 
                     error(err);
@@ -310,7 +331,10 @@ Mapper = function(OBJY, options) {
 
             var Obj = db.model(this.objectFamily, this.ObjSchema);
 
-            delete spooElement._id;
+            //delete spooElement._id;
+            if (!mongoose.Types.ObjectId.isValid(spooElement._id)) delete spooElement._id;
+            else spooElement._id = new mongoose.mongo.ObjectId(spooElement._id);
+
 
             if (this.multitenancy == this.CONSTANTS.MULTITENANCY.SHARED) spooElement.tenantId = client;
 

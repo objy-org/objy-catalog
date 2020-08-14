@@ -251,7 +251,7 @@ Mapper = function(OBJY, options) {
 
         count: function(criteria, success, error, app, client, flags) {
 
-             var db = this.getDBByMultitenancy(client);
+            var db = this.getDBByMultitenancy(client);
 
             var Obj = db.model(this.objectFamily, ObjSchema);
 
@@ -295,17 +295,19 @@ Mapper = function(OBJY, options) {
 
             try {
 
-                var fileId = shortid.generate();
+                var fileId = new mongoose.Types.ObjectId();
 
-                Attachment.write({ filename: fileId, name: fileId, mimetype: spooElement.properties.mimetype }, spooElement.properties.data, (err, file) => {
+                Attachment.write({ _id: fileId, filename: spooElement.name, name: spooElement.name, mimetype: spooElement.properties.mimetype }, spooElement.properties.data, (err, file) => {
                     if (err) {
                         OBJY.Logger.error(err);
                         error('Error adding file');
                         return;
                     }
 
-                    spooElement._id = file._id;
-                    spooElement.name = fileId;
+                    console.log('data', spooElement.properties.data);
+                    console.log('file', file);
+
+                    spooElement._id = fileId;
 
                     if (this.multitenancy == this.CONSTANTS.MULTITENANCY.SHARED) spooElement.tenantId = client;
 

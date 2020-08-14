@@ -1,6 +1,6 @@
 {
-  "name": "@spootechnologies/objy-catalog",
-  "version": "1.0.4",
+  "name": "objy-catalog",
+  "version": "0.0.30",
   "description": "A collection of additional objy resources like mappers, etc.",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spoo-technologies/objy-catalog.git"
+    "url": "git+https://github.com/objy-org/objy-catalog.git"
   },
   "keywords": [
     "platform",
@@ -18,9 +18,9 @@
   "author": "Marco Boelling",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/spoo-technologies/objy-catalog/issues"
+    "url": "https://github.com/objy-org/objy-catalog/issues"
   },
-  "homepage": "https://github.com/spoo-technologies/objy-catalog#readme",
+  "homepage": "https://github.com/objy-org/objy-catalog#readme",
   "dependencies": {
     "bcrypt": "^3.0.8",
     "bull": "^3.13.0",
