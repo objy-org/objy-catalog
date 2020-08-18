@@ -1,6 +1,6 @@
 {
   "name": "objy-catalog",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "A collection of additional objy resources like mappers, etc.",
   "main": "index.js",
   "scripts": {

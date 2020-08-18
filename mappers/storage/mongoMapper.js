@@ -227,16 +227,18 @@ Mapper = function(OBJY, options) {
             if (flags.$limit) finalQuery.limit(flags.$limit).sort(s);
             else finalQuery.limit(this.globalPaging).skip(this.globalPaging * (flags.$page || 0)).sort(s);
 
-            if (criteria.$sum || criteria.$count) {
-                var aggregation = JSON.parse(JSON.stringify(criteria.$sum || criteria.$count));;
+            if (criteria.$sum || criteria.$count || criteria.$avg) {
+                var aggregation = JSON.parse(JSON.stringify(criteria.$sum || criteria.$count || criteria.$avg));;
                 var pipeline = [];
                 var match = criteria.$match;
 
-                if(typeof match === 'string') match = JSON.parse(match);
-                
+                if (typeof match === 'string') match = JSON.parse(match);
+
                 if (match) pipeline.push({ $match: match });
 
-                pipeline.push({ $group: { _id: null, "sum": { $sum: { $toDouble: aggregation } } } })
+                if (criteria.$sum) pipeline.push({ $group: { _id: null, "sum": { $sum: { $toDouble: aggregation } } } })
+                else if (criteria.$count) pipeline.push({ $group: { _id: { "field": aggregation }, count: { $sum: 1 } } })
+                else if (criteria.$avg) pipeline.push({ $group: { _id: null, avg: { $avg: { $toDouble: aggregation } } } });
 
                 Obj.aggregate(pipeline, function(err, data) {
                     if (err) {
