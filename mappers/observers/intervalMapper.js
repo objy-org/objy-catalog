@@ -6,11 +6,11 @@ Mapper = function(OBJY) {
         initialize: function(millis) {
             var self = this;
 
-            this.interval = setInterval(function() {
+            setInterval(function() {
 
                 self.run(moment().utc());
 
-            }, this.interval)
+            }, self.interval)
         },
 
         run: function(date) {

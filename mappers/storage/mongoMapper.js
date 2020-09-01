@@ -26,6 +26,7 @@ Mapper = function(OBJY, options) {
             created: { type: String, index: true },
             lastModified: { type: String, index: true },
             role: String,
+            spooAdmin: Boolean,
             inherits: [],
             name: String,
             onDelete: {},
@@ -195,6 +196,9 @@ Mapper = function(OBJY, options) {
             if (flags.$page == 1) flags.$page = 0;
             else flags.$page -= 1;
 
+            if (flags.$pageSize)
+                if (flags.$pageSize > 1000) flags.$pageSize = 1000;
+
             if (this.multitenancy == this.CONSTANTS.MULTITENANCY.SHARED && client) criteria['tenantId'] = client;
 
             if (criteria.$query) {
@@ -203,7 +207,7 @@ Mapper = function(OBJY, options) {
             }
 
             var arr = [{ $match: criteria }, { $limit: 20 }];
-            if (flags.$page) arr.push({ $skip: this.globalPaging * (flags.$page || 0) })
+            if (flags.$page) arr.push({ $skip: (flags.$pageSize || this.globalPaging) * (flags.$page || 0) })
 
             var s = {};
 
@@ -225,7 +229,7 @@ Mapper = function(OBJY, options) {
             var finalQuery = Obj.find(criteria)
 
             if (flags.$limit) finalQuery.limit(flags.$limit).sort(s);
-            else finalQuery.limit(this.globalPaging).skip(this.globalPaging * (flags.$page || 0)).sort(s);
+            else finalQuery.limit((flags.$pageSize || this.globalPaging)).skip((flags.$pageSize || this.globalPaging) * (flags.$page || 0)).sort(s);
 
             if (criteria.$sum || criteria.$count || criteria.$avg) {
                 var aggregation = JSON.parse(JSON.stringify(criteria.$sum || criteria.$count || criteria.$avg));;
