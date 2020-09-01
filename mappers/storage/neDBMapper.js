@@ -80,6 +80,10 @@ var Mapper = function(OBJY, options) {
 
             var db = this.getDBByMultitenancy(client);
 
+            if (criteria.$query) {
+                criteria = JSON.parse(JSON.stringify(criteria.$query));
+            }
+
             if (app)
                 Object.assign(criteria, {
                     applications: {
@@ -92,8 +96,21 @@ var Mapper = function(OBJY, options) {
                     tenantId: client
                 })
 
+            console.log(criteria);
+
+            Object.keys(criteria).forEach(function(c) {
+                if ((criteria[c] || {}).hasOwnProperty('$regex')) {
+                    criteria[c].$regex = new RegExp(criteria[c].$regex, criteria[c].$options)
+                    delete criteria[c].$options;
+                }
+            })
+
+            console.log('after regexp', criteria);
+
             db.find(criteria, function(err, docs) {
+                console.log(criteria, err, docs)
                 if (err) return error('db error');
+                console.log('cc', criteria, docs);
                 success(docs);
             });
 
