@@ -231,6 +231,47 @@ Mapper = function(OBJY, options) {
             if (flags.$limit) finalQuery.limit(flags.$limit).sort(s);
             else finalQuery.limit((flags.$pageSize || this.globalPaging)).skip((flags.$pageSize || this.globalPaging) * (flags.$page || 0)).sort(s);
 
+
+            // CHECK IF PERMISSIONS EXIST
+            var newCriteria = {
+                "$and": []
+            };
+
+            var isAggregation = null;
+            var isAggregationType = null;
+
+            if (criteria['$and']) {
+                criteria['$and'].forEach(function(c) {
+
+                    if (c.$match) {
+                        if (typeof c.$match === 'string') c.$match = JSON.parse(c.$match);
+                        newCriteria['$and'].push(c.$match)
+                    } else if (c.$or) newCriteria['$and'].push({ $or: c.$or })
+
+                    if (c.$sum || c.$count || c.$avg) {
+                        isAggregation = c.$sum || c.$count || c.$avg;
+
+                        if (c.$sum) isAggregationType = '$sum';
+                        else if (c.$count) isAggregationType = '$count';
+                        else if (c.$avg) isAggregationType = '$avg';
+                    }
+                })
+            }
+
+
+            if (isAggregation) {
+
+                if (criteria.applications) newCriteria.$and.push({ applications: criteria.applications });
+
+                criteria = {
+
+                }
+
+                criteria[isAggregationType] = isAggregation;
+                criteria.$match = { $and: newCriteria['$and'] };
+            };
+
+
             if (criteria.$sum || criteria.$count || criteria.$avg) {
                 var aggregation = JSON.parse(JSON.stringify(criteria.$sum || criteria.$count || criteria.$avg));;
                 var pipeline = [];
@@ -244,6 +285,7 @@ Mapper = function(OBJY, options) {
                 else if (criteria.$count) pipeline.push({ $group: { _id: { "field": aggregation }, count: { $sum: 1 } } })
                 else if (criteria.$avg) pipeline.push({ $group: { _id: null, avg: { $avg: { $toDouble: aggregation } } } });
 
+
                 Obj.aggregate(pipeline, function(err, data) {
                     if (err) {
                         console.warn('mongo err', err)
@@ -256,15 +298,12 @@ Mapper = function(OBJY, options) {
 
             } else {
 
-                console.warn(criteria.$aggregate)
-
                 finalQuery.lean().exec(function(err, data) {
                     if (err) {
                         console.warn('mongo err', err)
                         error(err);
                         return;
                     }
-                    console.warn('data', data);
                     success(data);
                     return;
                 });

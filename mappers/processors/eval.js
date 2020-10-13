@@ -1,4 +1,4 @@
-Mapper = function(OBJY) {
+Mapper = function(OBJY, mapperOptions) {
     return Object.assign(new OBJY.ProcessorTemplate(OBJY), {
 
         execute: function(dsl, obj, prop, data, callback, client, app, user, options) {
@@ -6,14 +6,22 @@ Mapper = function(OBJY) {
             OBJY.Logger.log("Executing dsl in mapper")
             if (this.multitenancy == this.CONSTANTS.MULTITENANCY.ISOLATED) {
                 try {
-                    eval(dsl);
+                    if ((mapperOptions || {}).hasOwnProperty('parse')) {
+                        mapperOptions.parse(dsl);
+                    } else {
+                        eval(dsl);
+                    }
                 } catch (e) {
                     OBJY.Logger.error(e)
                 }
                 callback();
             } else {
                 try {
-                    eval(dsl);
+                    if ((mapperOptions || {}).hasOwnProperty('parse')) {
+                        mapperOptions.parse(dsl);
+                    } else {
+                        eval(dsl);
+                    }
                 } catch (e) {
                     OBJY.Logger.error(e)
                 }

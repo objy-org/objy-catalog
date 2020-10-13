@@ -1,16 +1,16 @@
 var catalog = {
     mappers: {
         storage: {
-            mongo: require('./mappers/storage/mongoMapper.js'),
-            gridFS: require('./mappers/storage/gridFSMapper.js')
+            mongo: require('./mappers/storage/mongoDB.js'),
+            gridFS: require('./mappers/storage/gridFS.js')
         },
         processors: {
             eval: require('./mappers/processors/eval.js'),
-            vm: require('./mappers/processors/vmMapper.js'),
-            vmBull: require('./mappers/processors/vmMapperBull.js')
+            vm: require('./mappers/processors/vm.js'),
+            vmBull: require('./mappers/processors/vmBull.js')
         },
         observers: {
-            interval: require('./mappers/observers/intervalMapper.js'),
+            interval: require('./mappers/observers/interval.js'),
             inMemory: require('./mappers/observers/inMemoryStream.js')
         }
     }

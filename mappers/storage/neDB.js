@@ -77,11 +77,13 @@ var Mapper = function(OBJY, options) {
 
         getByCriteria: function(criteria, success, error, app, client, flags) {
             if (!client) client = 'default';
-
+            var self = this;
             var db = this.getDBByMultitenancy(client);
 
             if (criteria.$query) {
-                criteria = JSON.parse(JSON.stringify(criteria.$query));
+                criteria = criteria.$query;
+                console.log('to', typeof criteria)
+                if (typeof criteria === 'string') criteria = JSON.parse(criteria)
             }
 
             if (app)
@@ -96,7 +98,7 @@ var Mapper = function(OBJY, options) {
                     tenantId: client
                 })
 
-            console.log(criteria);
+            console.log('final criterie', criteria);
 
             Object.keys(criteria).forEach(function(c) {
                 if ((criteria[c] || {}).hasOwnProperty('$regex')) {
@@ -105,12 +107,12 @@ var Mapper = function(OBJY, options) {
                 }
             })
 
-            console.log('after regexp', criteria);
+            console.log('after regexp', criteria, db, this.objectFamily);
 
             db.find(criteria, function(err, docs) {
                 console.log(criteria, err, docs)
                 if (err) return error('db error');
-                console.log('cc', criteria, docs);
+                console.log('cc', criteria, docs, client, self.objectFamily);
                 success(docs);
             });
 
