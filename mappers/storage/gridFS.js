@@ -121,7 +121,7 @@ Mapper = function(OBJY, options) {
                 new Admin(this.database.db).listDatabases(function(err, result) {
                     if (err) error(err)
                     success(result.databases.map(function(item) {
-                        return item.name
+                        return item.name;
                     }));
                 });
 

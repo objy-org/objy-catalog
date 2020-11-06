@@ -191,6 +191,7 @@ Mapper = function(OBJY, options) {
             var db = this.getDBByMultitenancy(client);
 
             var Obj = db.model(this.objectFamily, this.ObjSchema);
+            var Templ = db.model(this.objectFamily, this.ObjSchema);
 
 
             if (flags.$page == 1) flags.$page = 0;
@@ -226,11 +227,14 @@ Mapper = function(OBJY, options) {
 
             if (app) criteria['applications'] = { $in: [app] }
 
+            /*var templQuery = Templ.find(criteria, ['_id']);
             var finalQuery = Obj.find(criteria)
 
-            if (flags.$limit) finalQuery.limit(flags.$limit).sort(s);
-            else finalQuery.limit((flags.$pageSize || this.globalPaging)).skip((flags.$pageSize || this.globalPaging) * (flags.$page || 0)).sort(s);
-
+            if (flags.$limit) {
+                finalQuery.limit(flags.$limit).sort(s);
+            } else {
+                finalQuery.limit((flags.$pageSize ? +flags.$pageSize : this.globalPaging)).skip((flags.$pageSize || this.globalPaging) * (flags.$page || 0)).sort(s);
+            }*/
 
             // CHECK IF PERMISSIONS EXIST
             var newCriteria = {
@@ -298,15 +302,46 @@ Mapper = function(OBJY, options) {
 
             } else {
 
-                finalQuery.lean().exec(function(err, data) {
+                var templQuery = Templ.find(criteria, ['_id']);
+
+                templQuery.lean().exec(function(err, data) {
                     if (err) {
                         console.warn('mongo err', err)
                         error(err);
                         return;
                     }
+
+                    var templIds = [];
+                    data.forEach(d => {
+                        templIds.push(d._id);
+                    })
+
+                    var finalQuery = null;
+
+                    if (templIds.length) finalQuery = Obj.find({ $or: [criteria, { inherits: { $in: templIds } }] });
+                    else finalQuery = Obj.find(criteria)
+
+                    if (flags.$limit) {
+                        finalQuery.limit(flags.$limit).sort(s);
+                    } else {
+                        finalQuery.limit((flags.$pageSize ? +flags.$pageSize : this.globalPaging)).skip((flags.$pageSize || this.globalPaging) * (flags.$page || 0)).sort(s);
+                    }
+
+                    finalQuery.lean().exec(function(err, data) {
+                        if (err) {
+                            console.warn('mongo err', err)
+                            error(err);
+                            return;
+                        }
+                        success(data);
+                        return;
+                    });
+
+
                     success(data);
                     return;
                 });
+
 
             }
 

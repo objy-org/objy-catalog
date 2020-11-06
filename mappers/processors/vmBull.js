@@ -13,8 +13,8 @@ Mapper = function(OBJY) {
             this.jobQueue = new Queue('spoo jobs', redisCon);
 
             this.jobQueue.process(function(job, done) {
-               
-                new Mapper(OBJY).executeFromJob(job.data.dsl, JSON.parse(job.data.obj), JSON.parse(job.prop || {}), job.data.data, );
+
+                new Mapper(OBJY).executeFromJob(job.data.dsl, JSON.parse(job.data.obj), JSON.parse(job.prop || {}), job.data.data);
             });
 
             this.jobQueue.on('completed', function(job, result) {
