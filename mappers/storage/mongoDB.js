@@ -227,7 +227,6 @@ Mapper = function(OBJY, options) {
 
             if (app) criteria['applications'] = { $in: [app] }
 
-            var templQuery = Templ.find(criteria, ['_id']);
             var finalQuery = Obj.find(criteria)
 
             if (flags.$limit) {
