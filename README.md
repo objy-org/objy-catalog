@@ -1,3 +1,5 @@
+![Node.js Package](https://github.com/objy-org/objy-catalog/workflows/Node.js%20Package/badge.svg)
+
 # OBJY Catalog
 
 A collection of adapters for using the right technologies for specific use cases and building domain specific object families. 
