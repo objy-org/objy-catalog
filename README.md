@@ -24,7 +24,7 @@ Observer | Observes object events and execute their actions. | Cron-based soluti
 
 
 ```
-npm install @spootechnologies/objy-catalog
+npm install objy-catalog
 ```
 
 
@@ -33,7 +33,7 @@ npm install @spootechnologies/objy-catalog
 Let's create an Object Family that uses the following mappers:
 
 ```
-const CATALOG = require('@spootechnologies/objy-catalog');
+const CATALOG = require('objy-catalog');
 
 // Define an object family
 OBJY.define({
