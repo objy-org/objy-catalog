@@ -357,7 +357,7 @@ Mapper = function(OBJY, options) {
             })
 
         },
-        
+
         remove: function(spooElement, success, error, app, client) {
 
             var db = this.getDBByMultitenancy(client);
