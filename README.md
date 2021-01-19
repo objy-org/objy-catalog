@@ -1,4 +1,4 @@
-![Node.js Package](https://github.com/actions/hello-world/workflows/Node.js%20Package/badge.svg)
+![Node.js Package](https://github.com/objy-org/objy-catalog/workflows/Node.js%20Package/badge.svg)
 
 # OBJY Catalog
 
