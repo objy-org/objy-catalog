@@ -16,7 +16,6 @@ Processor | Used to execute object actions, event actions and handler actions | 
 Observer | Observes object events and execute their actions. | Cron-based solutions or event schedulers
 
 
-
 ## Installing
 
 
