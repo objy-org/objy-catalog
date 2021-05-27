@@ -44,6 +44,8 @@ Mapper = function(OBJY, options) {
             authorisations: {}
         },
 
+        staticDatabase: null,
+
         ObjSchema: new Schema(this.generalObjectModel, { minimize: false, strict: false }),
 
         NestedSchema: new Schema({}, { minimize: false }),
@@ -53,6 +55,10 @@ Mapper = function(OBJY, options) {
             this.generalObjectModel.properties = Object.assign(this.generalObjectModel.properties, structure.structure);
             this.ObjSchema = new Schema(this.generalObjectModel, { minimize: false });
             return this;
+        },
+
+        setStaticDatabase(name) {
+            this.staticDatabase = name;
         },
 
         connect: function(connectionString, success, error, options) {
@@ -89,6 +95,8 @@ Mapper = function(OBJY, options) {
         },
 
         getDBByMultitenancy: function(client) {
+
+            if (this.staticDatabase) return this.database.useDb(this.staticDatabase)
 
             if (this.multitenancy == this.CONSTANTS.MULTITENANCY.SHARED) {
                 return this.database.useDb('spoo')
