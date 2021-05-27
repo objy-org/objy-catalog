@@ -59,6 +59,7 @@ Mapper = function(OBJY, options) {
 
         setStaticDatabase(name) {
             this.staticDatabase = name;
+            return this;
         },
 
         connect: function(connectionString, success, error, options) {
